@@ -27,13 +27,6 @@
         <parameter key="sylius.settings_schema.taxation.class">Sylius\Bundle\CoreBundle\Settings\TaxationSettingsSchema</parameter>
         <parameter key="sylius.settings_schema.security.class">Sylius\Bundle\CoreBundle\Settings\SecuritySettingsSchema</parameter>
 
-        <parameter key="sylius.checkout_scenario.class">Sylius\Bundle\CoreBundle\Checkout\CheckoutProcessScenario</parameter>
-        <parameter key="sylius.checkout_step.security.class">Sylius\Bundle\CoreBundle\Checkout\Step\SecurityStep</parameter>
-        <parameter key="sylius.checkout_step.addressing.class">Sylius\Bundle\CoreBundle\Checkout\Step\AddressingStep</parameter>
-        <parameter key="sylius.checkout_step.shipping.class">Sylius\Bundle\CoreBundle\Checkout\Step\ShippingStep</parameter>
-        <parameter key="sylius.checkout_step.payment.class">Sylius\Bundle\CoreBundle\Checkout\Step\PaymentStep</parameter>
-        <parameter key="sylius.checkout_step.finalize.class">Sylius\Bundle\CoreBundle\Checkout\Step\FinalizeStep</parameter>
-
         <parameter key="sylius.resolver.default_shipping_method.class">Sylius\Component\Core\Resolver\DefaultShippingMethodResolver</parameter>
 
         <parameter key="sylius.taxation.order_shipment_taxes_applicator.class">Sylius\Component\Core\Taxation\Applicator\OrderShipmentTaxesApplicator</parameter>
@@ -94,12 +87,6 @@
         <parameter key="sylius.validator.customer_initializer.class">Sylius\Bundle\CoreBundle\Validator\Initializer\CustomerInitializer</parameter>
         <parameter key="sylius.user.validator.unique_registered_user.class">Sylius\Bundle\CoreBundle\Validator\Constraints\RegisteredUserValidator</parameter>
 
-        <parameter key="sylius.sql_logger.purger.purge_mode" type="constant">Doctrine\Common\DataFixtures\Purger\ORMPurger::PURGE_MODE_DELETE</parameter>
-        <parameter key="sylius.sql_logger.purger.class">Sylius\Bundle\CoreBundle\Purger\QueryLogger</parameter>
-
-        <parameter key="sylius.purger.orm_purger.doctrine.class">Doctrine\Common\DataFixtures\Purger\ORMPurger</parameter>
-        <parameter key="sylius.purger.orm_purger.class">Sylius\Bundle\CoreBundle\Purger\ORMPurger</parameter>
-
         <parameter key="sylius.provider.channel_based_default_zone_provider.class">Sylius\Bundle\CoreBundle\Provider\ChannelBasedDefaultTaxZoneProvider</parameter>
 
         <parameter key="sylius.integer_distributor.class">Sylius\Component\Core\Distributor\IntegerDistributor</parameter>
@@ -123,20 +110,11 @@
         <parameter key="sylius.form.type.product_legacy.class">Sylius\Bundle\CoreBundle\Form\Type\LegacyProductType</parameter>
 
         <parameter key="sylius.generator.product_variant.class">Sylius\Bundle\CoreBundle\Generator\ProductVariantGenerator</parameter>
+
+        <parameter key="sylius.inventory.on_hand_quantity_updater.class">Sylius\Component\Core\Inventory\Updater\OnHandQuantityUpdater</parameter>
     </parameters>
 
     <services>
-        <!-- settings schemas -->
-        <service id="sylius.settings_schema.general" class="%sylius.settings_schema.general.class%">
-            <argument type="collection">
-                <argument key="locale">%locale%</argument>
-            </argument>
-            <tag name="sylius.settings_schema" alias="sylius_general" />
-        </service>
-        <service id="sylius.settings_schema.security" class="%sylius.settings_schema.security.class%">
-            <tag name="sylius.settings_schema" alias="sylius_security" />
-        </service>
-
         <!-- cart -->
         <service id="sylius.cart_item_resolver.default" class="%sylius.cart_item_resolver.default.class%">
             <argument type="service" id="sylius.context.cart" />
@@ -146,43 +124,6 @@
             <argument type="service" id="sylius.price_calculator" />
             <argument type="service" id="sylius.context.channel" />
             <argument type="service" id="sylius.variant_resolver.default" />
-        </service>
-
-        <!-- checkout -->
-        <service id="sylius.checkout_scenario" class="%sylius.checkout_scenario.class%">
-            <argument type="service" id="sylius.context.cart" />
-            <tag name="sylius.process.scenario" alias="sylius_checkout" />
-        </service>
-
-        <service id="sylius.checkout_step.security" class="%sylius.checkout_step.security.class%">
-            <call method="setContainer">
-                <argument type="service" id="service_container" />
-            </call>
-            <tag name="sylius.process.step" alias="sylius_checkout_security" />
-        </service>
-        <service id="sylius.checkout_step.addressing" class="%sylius.checkout_step.addressing.class%">
-            <call method="setContainer">
-                <argument type="service" id="service_container" />
-            </call>
-            <tag name="sylius.process.step" alias="sylius_checkout_addressing" />
-        </service>
-        <service id="sylius.checkout_step.shipping" class="%sylius.checkout_step.shipping.class%">
-            <call method="setContainer">
-                <argument type="service" id="service_container" />
-            </call>
-            <tag name="sylius.process.step" alias="sylius_checkout_shipping" />
-        </service>
-        <service id="sylius.checkout_step.payment" class="%sylius.checkout_step.payment.class%">
-            <call method="setContainer">
-                <argument type="service" id="service_container" />
-            </call>
-            <tag name="sylius.process.step" alias="sylius_checkout_payment" />
-        </service>
-        <service id="sylius.checkout_step.finalize" class="%sylius.checkout_step.finalize.class%">
-            <call method="setContainer">
-                <argument type="service" id="service_container" />
-            </call>
-            <tag name="sylius.process.step" alias="sylius_checkout_finalize" />
         </service>
 
         <service id="sylius.provider.channel_based_default_zone_provider" class="%sylius.provider.channel_based_default_zone_provider.class%" />
@@ -338,8 +279,9 @@
 
         <service id="sylius.image_uploader" class="%sylius.image_uploader.class%">
             <argument type="service">
-                <service class="Gaufrette\Filesystem" factory-service="knp_gaufrette.filesystem_map" factory-method="get">
+                <service class="Gaufrette\Filesystem">
                     <argument>%sylius.uploader.filesystem%</argument>
+                    <factory service="knp_gaufrette.filesystem_map" method="get" />
                 </service>
             </argument>
         </service>
@@ -375,7 +317,7 @@
             <tag name="sylius.promotion_action" type="unit_fixed_discount" label="Item fixed discount" />
         </service>
         <service id="sylius.promotion_action.percentage_discount" class="%sylius.promotion_action.percentage_discount.class%">
-            <argument type="service" id="sylius.integer_distributor" />
+            <argument type="service" id="sylius.proportional_integer_distributor" />
             <argument type="service" id="sylius.promotion.units_promotion_adjustments_applicator" />
             <tag name="sylius.promotion_action" type="order_percentage_discount" label="Order percentage discount" />
         </service>
@@ -424,21 +366,6 @@
             <tag name="data_collector" template="SyliusCoreBundle:Collector:sylius.html.twig" id="sylius_core" priority="-512" />
         </service>
 
-        <service id="sylius.sql_logger.purger" class="%sylius.sql_logger.purger.class%" public="false" />
-
-        <service id="sylius.purger.orm_purger.doctrine" class="%sylius.purger.orm_purger.doctrine.class%" public="false">
-            <argument type="service" id="doctrine.orm.entity_manager" />
-            <call method="setPurgeMode">
-                <argument>%sylius.sql_logger.purger.purge_mode%</argument>
-            </call>
-        </service>
-
-        <service id="sylius.purger.orm_purger" class="%sylius.purger.orm_purger.class%" decorates="sylius.purger.orm_purger.doctrine">
-            <argument type="service" id="sylius.purger.orm_purger.inner" />
-            <argument type="service" id="doctrine.orm.entity_manager" />
-            <argument type="service" id="sylius.sql_logger.purger" />
-        </service>
-
         <service id="sylius.shipping_methods_resolver.zones_and_channel_based" class="%sylius.shipping_methods_resolver.zones_and_channel_based.class%">
             <argument type="service" id="sylius.repository.shipping_method" />
             <argument type="service" id="sylius.zone_matcher" />
@@ -485,6 +412,8 @@
             <argument type="service" id="sylius.custom_factory.cart_item.inner" />
             <argument type="service" id="sylius.variant_resolver.default" />
         </service>
+
+        <service id="sylius.inventory.on_hand_quantity_updater" class="%sylius.inventory.on_hand_quantity_updater.class%"/>
     </services>
 
 </container>

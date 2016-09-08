@@ -14,6 +14,7 @@ namespace Sylius\Behat\Context\Transform;
 use Behat\Behat\Context\Context;
 use Sylius\Component\Core\Repository\ProductRepositoryInterface;
 use Sylius\Component\Core\Repository\ProductVariantRepositoryInterface;
+use Webmozart\Assert\Assert;
 
 /**
  * @author Łukasz Chruściel <lukasz.chrusciel@lakion.com>
