@@ -303,7 +303,7 @@ final class ManagingTaxonsContext implements Context
     }
 
     /**
-     * @When I attach :path image with a code :code
+     * @When I attach the :path image with a code :code
      */
     public function iAttachImageWithACode($path, $code)
     {
@@ -322,5 +322,52 @@ final class ManagingTaxonsContext implements Context
             $this->updatePage->isImageWithCodeDisplayed($code),
             sprintf('Image with a code %s should have been displayed.', $code)
         );
+    }
+
+    /**
+     * @Then /^this taxon should not have(?:| also) an image with a code "([^"]*)"$/
+     */
+    public function thisTaxonShouldNotHaveAnImageWithCode($code)
+    {
+        Assert::false(
+            $this->updatePage->isImageWithCodeDisplayed($code),
+            sprintf('Image with a code %s should not have been displayed.', $code)
+        );
+    }
+
+    /**
+     * @When /^I remove(?:| also) an image with a code "([^"]*)"$/
+     */
+    public function iRemoveAnImageWithACode($code)
+    {
+        $this->updatePage->removeImageWithCode($code);
+    }
+
+    /**
+     * @When I remove the first image
+     */
+    public function iRemoveTheFirstImage()
+    {
+        $this->updatePage->removeFirstImage();
+    }
+
+    /**
+     * @Then this taxon should not have images
+     */
+    public function thisTaxonShouldNotHaveImages()
+    {
+        Assert::eq(
+            0,
+            $this->updatePage->countImages(),
+            'This taxon has %2$s, but it should not have.'
+        );
+    }
+
+    /**
+     * @When I change the image with the :code code to :path
+     */
+    public function iChangeItsImageToPathForTheCode($path, $code)
+    {
+        $this->updatePage->changeImageWithCode($code, $path);
     }
 }

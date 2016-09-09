@@ -41,7 +41,8 @@ final class ParameterTransformerListener
      */
     public function __construct(ServiceRegistryInterface $settingsSchemaRegistry)
     {
-        $this->settingsSchemaRegistry = $settingsSchemaRegistry;
+        // Circular reference detected for service "doctrine.dbal.default_connection", path: "doctrine.dbal.default_connection".
+        $this->container = $container;
     }
 
     /**

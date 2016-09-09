@@ -17,9 +17,19 @@
                                http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <imports>
-        <import resource="fixtures.xml" />
-        <import resource="fixtures_factories.xml" />
-        <import resource="order_processor.xml" />
+        <import resource="services/api_form.xml" />
+        <import resource="services/checkout.xml" />
+        <import resource="services/context.xml" />
+        <import resource="services/controller.xml" />
+        <import resource="services/dashboard.xml" />
+        <import resource="services/email.xml" />
+        <import resource="services/fixtures.xml" />
+        <import resource="services/fixtures_factories.xml" />
+        <import resource="services/form.xml" />
+        <import resource="services/handlers.xml" />
+        <import resource="services/order_processor.xml" />
+        <import resource="services/sitemap.xml" />
+        <import resource="services/templating.xml" />
     </imports>
 
     <parameters>
@@ -53,6 +63,7 @@
         <parameter key="sylius.listener.user_auto_login.class">Sylius\Bundle\CoreBundle\EventListener\UserAutoLoginListener</parameter>
         <parameter key="sylius.listener.canonicalizer.class">Sylius\Bundle\CoreBundle\EventListener\CanonicalizerListener</parameter>
         <parameter key="sylius.listener.user_registration.class">Sylius\Bundle\CoreBundle\EventListener\UserRegistrationListener</parameter>
+        <parameter key="sylius.listener.password_updater.class">Sylius\Bundle\CoreBundle\EventListener\PasswordUpdaterListener</parameter>
 
         <parameter key="sylius.active_promotions_by_channel_provider.class">Sylius\Component\Core\Provider\ActivePromotionsByChannelProvider</parameter>
 
@@ -80,8 +91,6 @@
         <parameter key="sylius.price_calculator.group_based.class">Sylius\Component\Core\Pricing\GroupBasedCalculator</parameter>
         <parameter key="sylius.price_calculator.zone_based.class">Sylius\Component\Core\Pricing\ZoneBasedCalculator</parameter>
         <parameter key="sylius.collector.core.class">Sylius\Bundle\CoreBundle\Collector\SyliusCollector</parameter>
-        <parameter key="sylius.generator.class">Sylius\Bundle\CoreBundle\Routing\SyliusAwareGenerator</parameter>
-        <parameter key="sylius.route_provider.class">Sylius\Bundle\CoreBundle\Routing\RouteProvider</parameter>
 
         <parameter key="sylius.validator.has_enabled_entity.class">Sylius\Bundle\CoreBundle\Validator\Constraints\HasEnabledEntityValidator</parameter>
         <parameter key="sylius.validator.customer_initializer.class">Sylius\Bundle\CoreBundle\Validator\Initializer\CustomerInitializer</parameter>
@@ -105,9 +114,6 @@
 
         <parameter key="sylius.authorization_checker.toggleable.class">Sylius\Bundle\CoreBundle\Authorization\ToggleableAuthorizationChecker</parameter>
         <parameter key="sylius.based_on_id_invoice_number_generator.class" >Sylius\Component\Core\Payment\IdBasedInvoiceNumberGenerator</parameter>
-
-        <!-- Should be deleted after old backend deletion -->
-        <parameter key="sylius.form.type.product_legacy.class">Sylius\Bundle\CoreBundle\Form\Type\LegacyProductType</parameter>
 
         <parameter key="sylius.generator.product_variant.class">Sylius\Bundle\CoreBundle\Generator\ProductVariantGenerator</parameter>
 
